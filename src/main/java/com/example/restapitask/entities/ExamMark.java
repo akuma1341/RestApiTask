@@ -1,6 +1,5 @@
 package com.example.restapitask.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,12 +15,10 @@ public class ExamMark {
 
     @ManyToOne
     @JoinColumn(name = "id_student")
-    @JsonManagedReference
     private Student student;
 
     @ManyToOne
     @JoinColumn(name = "id_subject")
-    @JsonManagedReference
     private Subject subject;
 
     @Column(name = "mark")

@@ -5,12 +5,25 @@ spring:
     username: sa
     password: sa
 
+  data:
+    rest:
+      base-path: /api/v1
+
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
     hibernate:
       ddl-auto: none
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

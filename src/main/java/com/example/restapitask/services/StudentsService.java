@@ -16,9 +16,9 @@ public interface StudentsService {
 
     Student update(Integer id, StudentRequestDTO studentDTO);
 
-    List<Student> updateAll(StudentRequestDTO... toUpdate);
+    List<Student> updateAll(List<StudentRequestDTO> toUpdate);
 
-    List<Student> createAll(StudentRequestDTO... toCreate);
+    List<Student> createAll(List<StudentRequestDTO> toCreate);
 
     void delete(Integer id);
 

@@ -5,8 +5,8 @@ import com.example.restapitask.services.StudentsService;
 import com.example.restapitask.services.dto.StudentRequestDTO;
 import com.example.restapitask.services.dto.StudentResponseDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,26 +14,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/students")
 @RequiredArgsConstructor
+@Slf4j
 public class StudentsRestController {
     private final StudentsService studentsService;
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "")
     public List<Student> getAll() {
         return studentsService.getAll();
     }
 
-    @GetMapping(value = "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/filtered")
     public List<StudentResponseDTO> getAllByLastName(@RequestParam(value = "lastName", defaultValue = "") String lastName, Pageable pageable) {
         return studentsService.getAllByLastName(lastName, pageable);
     }
 
-    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Student> create(@RequestBody StudentRequestDTO... toCreate) {
+    @PostMapping(value = "")
+    public List<Student> create(@RequestBody List<StudentRequestDTO> toCreate) {
         return studentsService.createAll(toCreate);
     }
 
-    @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Student> updateAll(@RequestBody StudentRequestDTO... toUpdate) {
+    @PutMapping(value = "")
+    public List<Student> updateAll(@RequestBody List<StudentRequestDTO> toUpdate) {
         return studentsService.updateAll(toUpdate);
     }
 
@@ -42,12 +43,12 @@ public class StudentsRestController {
         studentsService.deleteAllById(ids);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public Student getById(@PathVariable("id") Integer id) {
         return studentsService.getById(id);
     }
 
-    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}")
     public Student update(@PathVariable("id") Integer id, @RequestBody StudentRequestDTO requestDTO) {
         return studentsService.update(id, requestDTO);
     }
@@ -57,9 +58,9 @@ public class StudentsRestController {
         studentsService.delete(id);
     }
 
-    @PutMapping(value = "/setLastNames", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/setLastNames")
     public List<Student> setLastNames(@RequestParam("lastName") String lastName) {
-        System.out.println("studentsService.setLastNameForStudents(lastName) = " + studentsService.setLastNameForStudents(lastName));
+        log.info("studentsService.setLastNameForStudents(lastName) = " + studentsService.setLastNameForStudents(lastName));
         return studentsService.getAll();
     }
 

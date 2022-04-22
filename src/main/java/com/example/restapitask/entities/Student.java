@@ -1,10 +1,6 @@
 package com.example.restapitask.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -12,10 +8,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "students")
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +33,5 @@ public class Student {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "student")
-    @JsonBackReference
     private Set<ExamMark> examMarks;
 }

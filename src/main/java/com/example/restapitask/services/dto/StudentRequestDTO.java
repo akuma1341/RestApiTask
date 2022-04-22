@@ -1,10 +1,12 @@
 package com.example.restapitask.services.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Date;
 
+@Builder
 @Getter
 @RequiredArgsConstructor
 public class StudentRequestDTO {
