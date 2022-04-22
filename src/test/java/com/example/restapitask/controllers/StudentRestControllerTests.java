@@ -117,7 +117,6 @@ public class StudentRestControllerTests {
         mockMvc.perform(
                 put(urlTemplate + "/{id}", student.getId())
                         .content(objectMapper.writeValueAsString(student))
-//                        .content(s)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -3,13 +3,13 @@ package com.example.restapitask.services.impl;
 import com.example.restapitask.entities.Student;
 import com.example.restapitask.repositories.StudentsRepository;
 import com.example.restapitask.services.StudentsService;
+import com.example.restapitask.services.converters.StudentConverter;
 import com.example.restapitask.services.dto.StudentRequestDTO;
 import com.example.restapitask.services.dto.StudentResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentsServiceImpl implements StudentsService {
     private final StudentsRepository studentsRepository;
+    private final StudentConverter studentConverter;
 
     @Override
     public List<Student> getAll() {
@@ -26,7 +27,7 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     public List<StudentResponseDTO> getAllByLastName(String lastName, Pageable pageable) {
         return studentsRepository.findByLastName(lastName, pageable).stream()
-                .map(StudentResponseDTO::new)
+                .map(studentConverter::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -37,38 +38,24 @@ public class StudentsServiceImpl implements StudentsService {
 
     @Override
     public Student update(Integer id, StudentRequestDTO studentDTO) {
-        Student studentToUpdate = studentsRepository.getById(id);
-        studentToUpdate.setFirstName(studentDTO.getFirstName());
-        studentToUpdate.setLastName(studentDTO.getLastName());
-        studentToUpdate.setBirthDate(studentDTO.getBirthDate());
-        return studentsRepository.save(studentToUpdate);
+        return studentsRepository.save(studentConverter.toEntity(id, studentDTO));
     }
 
     @Override
-    public List<Student> updateAll(StudentRequestDTO... toUpdate) {
-        return studentsRepository.saveAll(Arrays.stream(toUpdate)
+    public List<Student> updateAll(List<StudentRequestDTO> toUpdate) {
+        List<Student> studentsToUpdate = toUpdate.stream()
                 .filter(studentDTO -> studentDTO.getId() != null)
-                .map(studentDTO -> {
-                    Student studentToUpdate = studentsRepository.getById(studentDTO.getId());
-                    studentToUpdate.setFirstName(studentDTO.getFirstName());
-                    studentToUpdate.setLastName(studentDTO.getLastName());
-                    studentToUpdate.setBirthDate(studentDTO.getBirthDate());
-                    return studentToUpdate;
-                })
-                .collect(Collectors.toList()));
+                .map(studentConverter::toEntity)
+                .collect(Collectors.toList());
+        return studentsRepository.saveAll(studentsToUpdate);
     }
 
     @Override
-    public List<Student> createAll(StudentRequestDTO... toCreate) {
-        return studentsRepository.saveAll(Arrays.stream(toCreate)
-                .map(studentDTO -> {
-                    Student studentToCreate = new Student();
-                    studentToCreate.setFirstName(studentDTO.getFirstName());
-                    studentToCreate.setLastName(studentDTO.getLastName());
-                    studentToCreate.setBirthDate(studentDTO.getBirthDate());
-                    return studentToCreate;
-                })
-                .collect(Collectors.toList()));
+    public List<Student> createAll(List<StudentRequestDTO> toCreate) {
+        List<Student> studentsToCreate = toCreate.stream()
+                .map(studentConverter::toEntity)
+                .collect(Collectors.toList());
+        return studentsRepository.saveAll(studentsToCreate);
     }
 
     @Override
